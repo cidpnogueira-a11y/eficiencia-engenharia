@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eficiência Engenharia — Empreitada de Alto Padrão · Lagoa Santa & BH</title>
+  <meta name="description" content="Empreitada completa com equipe fixa própria em Lagoa Santa, Vespasiano e Belo Horizonte. Do projeto à obra, sem improviso.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0E0E0C;
+      --bone: #F2EFE9;
+      --moss: #B5C18E;
+      --rust: #C8501A;
+      --steel: #6B6B66;
+      --line: rgba(255,255,255,0.08);
+      --line-dark: rgba(14,14,12,0.12);
+      --container-max: 1280px;
+      --pad-x: 64px;
+    }
+
+    @media (max-width: 1023px) { :root { --pad-x: 48px; } }
+    @media (max-width: 767px) { :root { --pad-x: 24px; } }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Geist', sans-serif;
+      background: var(--ink);
+      color: var(--bone);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding-left: var(--pad-x);
+      padding-right: var(--pad-x);
+    }
+
+    em.serif {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--moss);
+    }
+
+    /* ──────────── PREFERS REDUCED MOTION ──────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ──────────── REVEAL ──────────── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    [data-reveal].in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    [data-reveal][data-delay="1"] { transition-delay: 80ms; }
+    [data-reveal][data-delay="2"] { transition-delay: 160ms; }
+    [data-reveal][data-delay="3"] { transition-delay: 240ms; }
+    [data-reveal][data-delay="4"] { transition-delay: 320ms; }
+
+    /* ──────────── NAVIGATION ──────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 64px;
+      background: rgba(14, 14, 12, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      padding-left: 32px;
+      padding-right: 32px;
+      max-width: var(--container-max);
+      margin: 0 auto;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--bone);
+    }
+
+    .nav-logo-text {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--bone);
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: rgba(242, 239, 233, 0.7);
+      text-decoration: none;
+      position: relative;
+      transition: color 200ms;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--moss);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-links a:hover {
+      color: var(--bone);
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-cta {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--ink);
+      background: var(--moss);
+      padding: 10px 18px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: opacity 200ms;
+      white-space: nowrap;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    @media (max-width: 767px) {
+      .nav-links { display: none; }
+      .nav-inner { padding-left: 20px; padding-right: 20px; }
+    }
+
+    /* ──────────── HERO ──────────── */
+    .hero {
+      background: var(--ink);
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* Vídeo de fundo */
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      opacity: 0;
+      transition: opacity 1200ms ease;
+    }
+
+    .hero-video.ready { opacity: 1; }
+
+    /* Overlay para garantir legibilidade do texto branco sobre o vídeo */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(14,14,12,0.82) 0%, rgba(14,14,12,0.55) 55%, rgba(14,14,12,0.30) 100%),
+        linear-gradient(0deg, rgba(14,14,12,0.55) 0%, rgba(14,14,12,0.10) 50%);
+    }
+
+    @media (max-width: 767px) {
+      /* No mobile o texto ocupa toda a largura — escurece mais para legibilidade */
+      .hero-overlay {
+        background: linear-gradient(0deg, rgba(14,14,12,0.80) 0%, rgba(14,14,12,0.55) 60%, rgba(14,14,12,0.45) 100%);
+      }
+    }
+
+    .hero-content {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+
+    .hero-text {
+      grid-column: 2 / 9;
+    }
+
+    @media (max-width: 1023px) { .hero-text { grid-column: 1 / 10; } }
+    @media (max-width: 767px) { .hero-text { grid-column: 1 / -1; } }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--moss);
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 600ms ease, transform 600ms ease;
+      transition-delay: 100ms;
+    }
+
+    .hero.loaded .hero-eyebrow {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-headline {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: clamp(48px, 7vw, 92px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--bone);
+      margin-bottom: 40px;
+    }
+
+    .word {
+      overflow: hidden;
+      display: inline-block;
+      margin-right: 0.22em;
+    }
+
+    .word:last-child { margin-right: 0; }
+
+    .word .inner {
+      display: inline-block;
+      transform: translateY(110%);
+      transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero.loaded .word .inner {
+      transform: translateY(0);
+    }
+
+    .hero-line2 {
+      display: block;
+      margin-top: 8px;
+    }
+
+    .hero-para {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--steel);
+      max-width: 480px;
+      line-height: 1.55;
+      margin-bottom: 56px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 600ms ease, transform 600ms ease;
+      transition-delay: 750ms;
+    }
+
+    .hero.loaded .hero-para {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--bone);
+      background: var(--rust);
+      padding: 16px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 200ms;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-secondary {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--bone);
+      background: transparent;
+      padding: 16px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      transition: border-color 200ms, color 200ms;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); }
+
+    .hero-cta-item {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 500ms ease, transform 500ms ease;
+    }
+
+    .hero.loaded .hero-cta-item:nth-child(1) {
+      opacity: 1; transform: translateY(0);
+      transition-delay: 900ms;
+    }
+
+    .hero.loaded .hero-cta-item:nth-child(2) {
+      opacity: 1; transform: translateY(0);
+      transition-delay: 1000ms;
+    }
+
+    /* ──────────── STATS BAR ──────────── */
+    .stats-bar {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--ink);
+      opacity: 0;
+      transition: opacity 600ms ease;
+      transition-delay: 1100ms;
+    }
+
+    .hero.loaded .stats-bar { opacity: 1; }
+
+    .stats-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding-left: var(--pad-x);
+      padding-right: var(--pad-x);
+    }
+
+    .stat-item {
+      padding: 24px 0;
+      border-right: 1px solid var(--line);
+      padding-left: 32px;
+    }
+
+    .stat-item:first-child { padding-left: 0; }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 32px;
+      color: var(--bone);
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--steel);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+      display: block;
+    }
+
+    @media (max-width: 767px) {
+      .stats-inner {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 0;
+        scrollbar-width: none;
+      }
+      .stats-inner::-webkit-scrollbar { display: none; }
+      .stat-item {
+        min-width: 140px;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+        border-right: 1px solid var(--line);
+      }
+      .stat-item:last-child { border-right: none; }
+    }
+
+    /* ──────────── SECTION 2 — O QUE FAZEMOS ──────────── */
+    .section-services {
+      background: var(--bone);
+      color: var(--ink);
+      padding: 120px 0;
+    }
+
+    .services-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: rgba(14, 14, 12, 0.5);
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 64px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .services-left {
+      grid-column: 1 / 6;
+      position: sticky;
+      top: 96px;
+    }
+
+    .services-right {
+      grid-column: 7 / 13;
+    }
+
+    @media (max-width: 1023px) {
+      .services-left, .services-right {
+        grid-column: 1 / -1;
+        position: static;
+      }
+      .services-left { margin-bottom: 48px; }
+    }
+
+    .services-headline {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: clamp(36px, 4vw, 56px);
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .services-desc {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--steel);
+      max-width: 380px;
+      line-height: 1.6;
+    }
+
+    /* Accordion */
+    .accordion-item {
+      border-top: 1px solid var(--line-dark);
+    }
+
+    .accordion-item:last-child {
+      border-bottom: 1px solid var(--line-dark);
+    }
+
+    .accordion-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 28px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      gap: 16px;
+    }
+
+    .accordion-trigger-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .accordion-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--steel);
+      flex-shrink: 0;
+    }
+
+    .accordion-title {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 18px;
+      color: var(--ink);
+      transition: color 200ms;
+    }
+
+    .accordion-trigger:hover .accordion-title { color: var(--moss); }
+
+    .accordion-icon {
+      font-size: 20px;
+      color: var(--steel);
+      transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1), color 200ms;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .accordion-item.open .accordion-icon {
+      transform: rotate(45deg);
+      color: var(--moss);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .accordion-item.open .accordion-body {
+      max-height: 200px;
+    }
+
+    .accordion-body-inner {
+      padding-bottom: 28px;
+      padding-left: calc(13px + 20px);
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+      color: var(--steel);
+      line-height: 1.65;
+      max-width: 480px;
+    }
+
+    /* ──────────── SECTION 3 — QUEM SOMOS ──────────── */
+    .section-about {
+      background: var(--ink);
+      padding: 120px 0;
+    }
+
+    .about-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: rgba(242, 239, 233, 0.4);
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 64px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .about-text {
+      grid-column: 1 / 7;
+    }
+
+    .about-photo {
+      grid-column: 8 / 13;
+    }
+
+    @media (max-width: 1023px) {
+      .about-text, .about-photo { grid-column: 1 / -1; }
+      .about-photo { order: -1; margin-bottom: 48px; }
+    }
+
+    .about-headline {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: clamp(36px, 4vw, 56px);
+      color: var(--bone);
+      line-height: 1;
+      margin-bottom: 32px;
+    }
+
+    .about-body {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--steel);
+      max-width: 420px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .about-body p + p { margin-top: 16px; }
+
+    .about-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(181, 193, 142, 0.12);
+      border: 1px solid var(--moss);
+      color: var(--moss);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 11px;
+      padding: 8px 14px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .about-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--moss);
+      flex-shrink: 0;
+    }
+
+    .about-photo-container {
+      aspect-ratio: 4 / 5;
+      background: var(--bone);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-photo-container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(107, 107, 102, 0.1);
+      pointer-events: none;
+    }
+
+    .about-photo-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      z-index: 1;
+    }
+
+    /* Placeholder fica visível apenas se a imagem falhar ou não existir */
+    .about-photo-container.has-img::after { background: transparent; }
+    .about-photo-container.has-img .about-initials { display: none; }
+
+    .about-initials {
+      font-family: 'Geist', sans-serif;
+      font-weight: 700;
+      font-size: 96px;
+      color: rgba(14, 14, 12, 0.4);
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+
+    /* ──────────── SECTION — PROJETOS (GALERIA) ──────────── */
+    .section-projects {
+      background: var(--ink);
+      padding: 0 0 120px;
+    }
+
+    .projects-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: rgba(242, 239, 233, 0.4);
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .projects-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+
+    .projects-headline {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: clamp(36px, 4vw, 56px);
+      color: var(--bone);
+      line-height: 1;
+    }
+
+    .projects-sub {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--steel);
+      max-width: 340px;
+      line-height: 1.55;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .project-tile {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #1a1a17;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      aspect-ratio: 4 / 5;
+    }
+
+    /* Escalonamento editorial: coluna do meio desce um pouco (só desktop) */
+    @media (min-width: 1024px) {
+      .projects-grid > .project-tile:nth-child(3n+2) {
+        transform: translateY(44px);
+      }
+    }
+
+    .project-media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .project-tile:hover .project-media { transform: scale(1.04); }
+
+    /* Placeholder enquanto o arquivo não existe */
+    .project-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--steel);
+      z-index: 0;
+    }
+
+    .project-placeholder .ph-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+
+    .project-placeholder .ph-hint {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    /* Gradiente + legenda sobre a mídia */
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(0deg, rgba(14,14,12,0.75) 0%, rgba(14,14,12,0) 45%);
+      opacity: 0;
+      transition: opacity 350ms ease;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+    }
+
+    .project-tile:hover .project-overlay { opacity: 1; }
+
+    .project-caption .pc-title {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--bone);
+      display: block;
+    }
+
+    .project-caption .pc-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--moss);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-top: 3px;
+    }
+
+    /* Selo de "vídeo" no canto */
+    .project-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(14,14,12,0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      padding: 5px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--bone);
+      text-transform: uppercase;
+    }
+
+    .project-badge .pb-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--moss);
+    }
+
+    @media (max-width: 1023px) {
+      .projects-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    }
+
+    @media (max-width: 767px) {
+      .projects-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .project-overlay { opacity: 1; }
+    }
+
+    /* ──────────── LIGHTBOX ──────────── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(8, 8, 7, 0.94);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5vh 5vw;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 300ms ease, visibility 300ms ease;
+    }
+
+    .lightbox.open { opacity: 1; visibility: visible; }
+
+    .lightbox-content {
+      max-width: 100%;
+      max-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-content img,
+    .lightbox-content video {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+      transform: scale(0.96);
+      transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lightbox.open .lightbox-content img,
+    .lightbox.open .lightbox-content video { transform: scale(1); }
+
+    .lightbox-close {
+      position: fixed;
+      top: 24px;
+      right: 28px;
+      z-index: 1001;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(14,14,12,0.6);
+      color: var(--bone);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 200ms, background 200ms;
+    }
+
+    .lightbox-close:hover { border-color: var(--moss); background: rgba(14,14,12,0.85); }
+
+    /* ──────────── SECTION 4 — DEPOIMENTOS ──────────── */
+    .section-testimonials {
+      background: var(--bone);
+      color: var(--ink);
+      padding: 120px 0;
+    }
+
+    .testimonials-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: rgba(14, 14, 12, 0.5);
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 64px;
+    }
+
+    .testimonials-headline {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: clamp(36px, 4vw, 56px);
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 80px;
+      max-width: 600px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+    }
+
+    @media (max-width: 1023px) {
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+
+    .testimonial-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .testimonial-line {
+      width: 60px;
+      height: 1px;
+      background: var(--moss);
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .testimonial-quote {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      color: var(--ink);
+      line-height: 1.5;
+      flex: 1;
+      margin-bottom: 32px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--bone);
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .testimonial-name {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--ink);
+      display: block;
+    }
+
+    .testimonial-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--steel);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ──────────── SECTION 5 — CTA FINAL ──────────── */
+    .section-cta {
+      background: var(--ink);
+      padding: 160px 0 0;
+    }
+
+    @media (max-width: 767px) {
+      .section-cta { padding: 100px 0 0; }
+    }
+
+    .cta-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .cta-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--moss);
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+    }
+
+    .cta-headline {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: clamp(40px, 6vw, 72px);
+      color: var(--bone);
+      line-height: 1;
+      max-width: 800px;
+      margin-bottom: 32px;
+    }
+
+    .cta-desc {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--steel);
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary-lg {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--bone);
+      background: var(--rust);
+      padding: 16px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: opacity 200ms;
+    }
+
+    .btn-primary-lg:hover { opacity: 0.88; }
+
+    .btn-secondary-lg {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--bone);
+      background: transparent;
+      padding: 16px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      transition: border-color 200ms;
+    }
+
+    .btn-secondary-lg:hover { border-color: rgba(255,255,255,0.2); }
+
+    .btn-primary-lg { border: none; cursor: pointer; }
+
+    .cta-select-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--moss);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    /* ──────────── FORM MODAL ──────────── */
+    .form-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(8, 8, 7, 0.94);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 300ms ease, visibility 300ms ease;
+    }
+
+    .form-modal.open { opacity: 1; visibility: visible; }
+
+    .form-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bone);
+      border-radius: 8px;
+      padding: 40px;
+      position: relative;
+      transform: translateY(16px) scale(0.98);
+      transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    .form-modal.open .form-card { transform: translateY(0) scale(1); }
+
+    .form-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--line-dark);
+      background: transparent;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 200ms;
+    }
+
+    .form-close:hover { border-color: var(--moss); }
+
+    .form-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 11px;
+      color: rgba(14, 14, 12, 0.5);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .form-title {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: 26px;
+      color: var(--ink);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .form-subtitle {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--steel);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .form-field { margin-bottom: 18px; }
+
+    .form-field label {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line-dark);
+      border-radius: 6px;
+      padding: 12px 14px;
+      transition: border-color 200ms;
+      resize: vertical;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      outline: none;
+      border-color: var(--moss);
+    }
+
+    .form-field textarea { min-height: 90px; }
+
+    .form-submit {
+      width: 100%;
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--bone);
+      background: var(--rust);
+      border: none;
+      border-radius: 100px;
+      padding: 16px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 200ms;
+    }
+
+    .form-submit:hover { opacity: 0.9; }
+    .form-submit:disabled { opacity: 0.55; cursor: default; }
+
+    .form-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--steel);
+      letter-spacing: 0.04em;
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.4;
+    }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .form-success.show { display: block; }
+    .form-card.sent .form-body { display: none; }
+
+    .form-success-icon {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(181, 193, 142, 0.25);
+      border: 1px solid var(--moss);
+      color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 16px;
+    }
+
+    .form-success h3 {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .form-success p {
+      font-family: 'Geist', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--steel);
+      line-height: 1.5;
+    }
+
+    /* ──────────── FOOTER ──────────── */
+    .footer {
+      background: var(--ink);
+      margin-top: 120px;
+      border-top: 1px solid var(--line);
+      padding: 32px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--bone);
+    }
+
+    .footer-logo-text {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--bone);
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      font-size: 12px;
+      color: rgba(242, 239, 233, 0.4);
+    }
+
+    .footer-social {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--moss);
+      text-decoration: none;
+      transition: opacity 200ms;
+    }
+
+    .footer-social:hover { opacity: 0.7; }
+
+    @media (max-width: 767px) {
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .section-services, .section-about, .section-testimonials, .section-cta {
+        padding-top: 80px; padding-bottom: 80px;
+      }
+      .testimonials-headline { margin-bottom: 48px; }
+      .services-desc { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ NAVIGATION ══════════ -->
+  <nav class="nav" role="navigation" aria-label="Principal">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Eficiência Engenharia — página inicial">
+        <svg width="22" height="28" viewBox="0 0 44 54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="color:var(--bone)">
+          <rect x="0" y="0" width="7" height="54" fill="currentColor"/>
+          <rect x="0" y="0" width="34" height="7" fill="currentColor"/>
+          <rect x="0" y="23.5" width="23" height="7" fill="var(--moss)"/>
+          <rect x="0" y="47" width="34" height="7" fill="currentColor"/>
+        </svg>
+        <span class="nav-logo-text">Eficiência Engenharia</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#servicos">Serviços</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#projetos">Projetos</a></li>
+        <li><a href="#depoimentos">Depoimentos</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+
+      <a href="#contato" class="nav-cta">Orçamento →</a>
+    </div>
+  </nav>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero" id="hero" aria-label="Apresentação">
+    <!-- Vídeo de fundo em loop. Arquivo "hero.mp4" na mesma pasta.
+         Mudo + playsinline para autoplay funcionar em todos os navegadores (inclusive iPhone).
+         Se não carregar, o fundo --ink sólido permanece. -->
+    <video class="hero-video" autoplay loop muted playsinline preload="auto" aria-hidden="true"
+           onloadeddata="this.classList.add('ready')">
+      <source src="hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content container">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <span class="hero-eyebrow">//00 — EMPREITADA · LAGOA SANTA &amp; BH</span>
+
+          <h1 class="hero-headline" id="heroHeadline">
+            <span class="headline-line1">Do projeto à obra.</span>
+            <span class="hero-line2 headline-line2">Sem <em class="serif">improviso.</em></span>
+          </h1>
+
+          <p class="hero-para">
+            Equipe fixa própria, engenheiros experientes e flexibilidade
+            real para executar — seja você o proprietário do imóvel ou
+            o arquiteto do projeto.
+          </p>
+
+          <div class="hero-ctas">
+            <div class="hero-cta-item">
+              <a href="#contato" class="btn-primary">Solicitar orçamento →</a>
+            </div>
+            <div class="hero-cta-item">
+              <a href="#servicos" class="btn-secondary">Ver nossos diferenciais</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <span class="stat-num">+13</span>
+          <span class="stat-label">anos de canteiro</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">+7</span>
+          <span class="stat-label">em alto padrão</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">3</span>
+          <span class="stat-label">regiões de atuação</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">equipe própria</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ SEÇÃO 2 — SERVIÇOS ══════════ -->
+  <section class="section-services" id="servicos" aria-label="Serviços">
+    <div class="container">
+      <span class="services-eyebrow" data-reveal>//01 — O ESCOPO DA OBRA</span>
+
+      <div class="services-grid">
+        <div class="services-left">
+          <h2 class="services-headline" data-reveal>
+            Cada obra<br>
+            tem uma demanda<br>
+            <em class="serif" style="color:var(--moss)">diferente.</em>
+          </h2>
+          <p class="services-desc" data-reveal data-delay="1">
+            Nossa metodologia foi feita pra se adaptar à sua —
+            não o contrário. Do projeto arquitetônico completo
+            até a ideia ainda no papel.
+          </p>
+        </div>
+
+        <div class="services-right" data-reveal data-delay="2">
+          <!-- Accordion 01 -->
+          <div class="accordion-item open">
+            <button class="accordion-trigger" aria-expanded="true" aria-controls="acc-body-1">
+              <div class="accordion-trigger-left">
+                <span class="accordion-num">01</span>
+                <span class="accordion-title">Da Planta à Fundação</span>
+              </div>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-body" id="acc-body-1" role="region">
+              <div class="accordion-body-inner">
+                Recebemos seu projeto ou criamos do zero. Fazemos terraplenagem, fundação e estrutura — base sólida para tudo que vem depois.
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordion 02 -->
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-body-2">
+              <div class="accordion-trigger-left">
+                <span class="accordion-num">02</span>
+                <span class="accordion-title">Alvenaria e Pisos</span>
+              </div>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-body" id="acc-body-2" role="region">
+              <div class="accordion-body-inner">
+                Erguemos a obra completa. Paredes, contrapiso, pisos. A execução dura, técnica, que tem que tá impecável antes de você sequer pensar em acabamento.
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordion 03 -->
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-body-3">
+              <div class="accordion-trigger-left">
+                <span class="accordion-num">03</span>
+                <span class="accordion-title">Pintura e Acabamento</span>
+              </div>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-body" id="acc-body-3" role="region">
+              <div class="accordion-body-inner">
+                Combinamos junto ou contratado separado. Você escolhe se a Eficiência entrega chave na mão ou se você tem outro acabador de confiança.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ SEÇÃO 3 — SOBRE ══════════ -->
+  <section class="section-about" id="sobre" aria-label="Quem somos">
+    <div class="container">
+      <span class="about-eyebrow" data-reveal>//02 — QUEM ESTÁ NA OBRA</span>
+
+      <div class="about-grid">
+        <div class="about-text">
+          <h2 class="about-headline" data-reveal>
+            13 anos<br>
+            no canteiro.<br>
+            <em class="serif">7 deles</em><br>
+            em alto padrão.
+          </h2>
+
+          <div class="about-body" data-reveal data-delay="1">
+            <p>
+              Lucas Soares é o Mestre de Obras da Eficiência.
+              Nasceu nas obras — aprendeu cada etapa da construção
+              no canteiro, não em curso.
+            </p>
+            <p>
+              Nos últimos sete anos, dedicou-se exclusivamente
+              a obras de alto padrão em Vespasiano, Lagoa Santa
+              e Belo Horizonte.
+            </p>
+            <p>Está na obra. Todo dia.</p>
+          </div>
+
+          <div data-reveal data-delay="2">
+            <span class="about-tag">
+              <span class="about-dot" aria-hidden="true"></span>
+              Mestre de Obras · 13 Anos
+            </span>
+          </div>
+        </div>
+
+        <div class="about-photo" data-reveal data-delay="1">
+          <!-- Foto: arquivo "lucas.jpg" na mesma pasta. Ratio 4:5, object-fit cover.
+               Se a imagem não carregar, o placeholder L.S. aparece automaticamente. -->
+          <div class="about-photo-container" id="aboutPhoto">
+            <img
+              class="about-photo-img"
+              src="lucas.jpg"
+              alt="Lucas Soares, Mestre de Obras da Eficiência Engenharia"
+              onload="this.closest('.about-photo-container').classList.add('has-img')"
+              onerror="this.remove()">
+            <span class="about-initials" aria-label="Lucas Soares">L.S.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ SEÇÃO 4 — PROJETOS (GALERIA) ══════════ -->
+  <section class="section-projects" id="projetos" aria-label="Projetos">
+    <div class="container">
+      <span class="projects-eyebrow" data-reveal>//03 — OBRAS ENTREGUES</span>
+
+      <div class="projects-head">
+        <h2 class="projects-headline" data-reveal>
+          Prova que fica<br>
+          <em class="serif">de pé.</em>
+        </h2>
+        <p class="projects-sub" data-reveal data-delay="1">
+          Cada obra abaixo é nossa. Sem render, sem banco de imagens —
+          concreto, prazo e acabamento real.
+        </p>
+      </div>
+
+      <!--
+        GALERIA — 9 itens verticais (3 vídeos + 6 fotos), arquivos na pasta "projetos/".
+        Caminhos URL-encoded (espaços/acentos). data-sound="on" → vídeo abre COM som no clique.
+        Placeholder some quando a mídia carrega.
+      -->
+      <div class="projects-grid" data-reveal data-delay="2">
+
+        <!-- 01 — VÍDEO · Instrução inicial (som no clique) -->
+        <figure class="project-tile" data-type="video" data-sound="on"
+                data-src="projetos/Instru%C3%A7%C3%A3o%20inicial%20para%20a%20obra.mp4">
+          <video class="project-media" muted loop playsinline preload="metadata"
+                 onloadeddata="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+                 onerror="this.remove()">
+            <source src="projetos/Instru%C3%A7%C3%A3o%20inicial%20para%20a%20obra.mp4" type="video/mp4">
+          </video>
+          <div class="project-placeholder"><span class="ph-num">01</span><span class="ph-hint">Instrução inicial</span></div>
+          <span class="project-badge"><span class="pb-dot"></span> Vídeo · som</span>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Instrução inicial de obra</span><span class="pc-meta">Vídeo · Canteiro</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 02 — FOTO · Banheiro Antes -->
+        <figure class="project-tile" data-type="image"
+                data-src="projetos/Banheiro%20Alto%20Padr%C3%A3o%20Antes.jpeg">
+          <img class="project-media" src="projetos/Banheiro%20Alto%20Padr%C3%A3o%20Antes.jpeg"
+               alt="Banheiro alto padrão — antes da obra"
+               onload="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+               onerror="this.remove()">
+          <div class="project-placeholder"><span class="ph-num">02</span><span class="ph-hint">Banheiro · Antes</span></div>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Banheiro alto padrão</span><span class="pc-meta">Antes</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 03 — FOTO · Banheiro Depois -->
+        <figure class="project-tile" data-type="image"
+                data-src="projetos/Banheiro%20Alto%20Padr%C3%A3o%20Depois.jpeg">
+          <img class="project-media" src="projetos/Banheiro%20Alto%20Padr%C3%A3o%20Depois.jpeg"
+               alt="Banheiro alto padrão — depois da obra"
+               onload="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+               onerror="this.remove()">
+          <div class="project-placeholder"><span class="ph-num">03</span><span class="ph-hint">Banheiro · Depois</span></div>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Banheiro alto padrão</span><span class="pc-meta">Depois</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 04 — FOTO · Área de lazer -->
+        <figure class="project-tile" data-type="image"
+                data-src="projetos/Acabemento%20em%20%C3%A1rea%20de%20lazer.jpeg">
+          <img class="project-media" src="projetos/Acabemento%20em%20%C3%A1rea%20de%20lazer.jpeg"
+               alt="Acabamento em área de lazer"
+               onload="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+               onerror="this.remove()">
+          <div class="project-placeholder"><span class="ph-num">04</span><span class="ph-hint">Área de lazer</span></div>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Área de lazer</span><span class="pc-meta">Acabamento</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 05 — VÍDEO · 2ª laje (som no clique) -->
+        <figure class="project-tile" data-type="video" data-sound="on"
+                data-src="projetos/2%C2%AA%20laje%20solicitada%20pelo%20arquiteto%20em%20execu%C3%A7%C3%A3o.mp4">
+          <video class="project-media" muted loop playsinline preload="metadata"
+                 onloadeddata="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+                 onerror="this.remove()">
+            <source src="projetos/2%C2%AA%20laje%20solicitada%20pelo%20arquiteto%20em%20execu%C3%A7%C3%A3o.mp4" type="video/mp4">
+          </video>
+          <div class="project-placeholder"><span class="ph-num">05</span><span class="ph-hint">2ª laje</span></div>
+          <span class="project-badge"><span class="pb-dot"></span> Vídeo · som</span>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">2ª laje em execução</span><span class="pc-meta">Vídeo · Estrutura</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 06 — FOTO · Piscinas -->
+        <figure class="project-tile" data-type="image"
+                data-src="projetos/Piscinas%20Prontas.jpeg">
+          <img class="project-media" src="projetos/Piscinas%20Prontas.jpeg"
+               alt="Piscinas prontas"
+               onload="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+               onerror="this.remove()">
+          <div class="project-placeholder"><span class="ph-num">06</span><span class="ph-hint">Piscinas</span></div>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Piscinas entregues</span><span class="pc-meta">Área externa</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 07 — FOTO · Obra comercial interna -->
+        <figure class="project-tile" data-type="image"
+                data-src="projetos/Obra%20comercial%20interna.jpeg">
+          <img class="project-media" src="projetos/Obra%20comercial%20interna.jpeg"
+               alt="Obra comercial interna"
+               onload="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+               onerror="this.remove()">
+          <div class="project-placeholder"><span class="ph-num">07</span><span class="ph-hint">Comercial</span></div>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Obra comercial</span><span class="pc-meta">Interior</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 08 — FOTO · Prédio comercial Uberlândia -->
+        <figure class="project-tile" data-type="image"
+                data-src="projetos/Pr%C3%A9dio%20Comercial%20em%20Uberl%C3%A2ndia%20-%20MG%20-%20Projeto%20feito%20do%200%20at%C3%A9%20a%20finaliza%C3%A7%C3%A3o.jpeg">
+          <img class="project-media" src="projetos/Pr%C3%A9dio%20Comercial%20em%20Uberl%C3%A2ndia%20-%20MG%20-%20Projeto%20feito%20do%200%20at%C3%A9%20a%20finaliza%C3%A7%C3%A3o.jpeg"
+               alt="Prédio comercial em Uberlândia — projeto do início à finalização"
+               onload="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+               onerror="this.remove()">
+          <div class="project-placeholder"><span class="ph-num">08</span><span class="ph-hint">Prédio comercial</span></div>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Prédio comercial</span><span class="pc-meta">Uberlândia · do 0 à entrega</span>
+          </figcaption></div>
+        </figure>
+
+        <!-- 09 — VÍDEO · Gestão do interior (mudo) -->
+        <figure class="project-tile" data-type="video"
+                data-src="projetos/Gest%C3%A3o%20inteligente%20do%20interior%20do%20projeto.mp4">
+          <video class="project-media" muted loop playsinline preload="metadata"
+                 onloadeddata="this.nextElementSibling && this.nextElementSibling.classList.contains('project-placeholder') && this.nextElementSibling.remove()"
+                 onerror="this.remove()">
+            <source src="projetos/Gest%C3%A3o%20inteligente%20do%20interior%20do%20projeto.mp4" type="video/mp4">
+          </video>
+          <div class="project-placeholder"><span class="ph-num">09</span><span class="ph-hint">Gestão do interior</span></div>
+          <span class="project-badge"><span class="pb-dot"></span> Vídeo</span>
+          <div class="project-overlay"><figcaption class="project-caption">
+            <span class="pc-title">Gestão do interior</span><span class="pc-meta">Vídeo · Execução</span>
+          </figcaption></div>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox (compartilhado pela galeria) -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Visualização de projeto">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">&times;</button>
+    <div class="lightbox-content" id="lightboxContent"></div>
+  </div>
+
+  <!-- Modal do formulário de orçamento -->
+  <div class="form-modal" id="formModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Formulário de orçamento">
+    <div class="form-card" id="formCard">
+      <button class="form-close" id="formClose" aria-label="Fechar">&times;</button>
+
+      <div class="form-body">
+        <span class="form-eyebrow">// ORÇAMENTO</span>
+        <h3 class="form-title">Preencha um breve formulário</h3>
+        <p class="form-subtitle">Leva menos de um minuto. A gente responde no seu WhatsApp.</p>
+
+        <!--
+          Envio por e-mail SEM backend, via FormSubmit (formsubmit.co).
+          Os envios chegam em: cid.pnogueira@gmail.com
+          IMPORTANTE: no PRIMEIRO envio, o FormSubmit manda um e-mail de confirmação
+          para esse endereço — basta clicar no link uma vez para ativar. Depois disso,
+          todos os formulários chegam direto na caixa de entrada.
+        -->
+        <form id="orcamentoForm" autocomplete="on">
+          <div class="form-field">
+            <label for="f-nome">Nome</label>
+            <input type="text" id="f-nome" name="Nome" required placeholder="Seu nome">
+          </div>
+          <div class="form-field">
+            <label for="f-whats">WhatsApp</label>
+            <input type="tel" id="f-whats" name="WhatsApp" required placeholder="(00) 00000-0000">
+          </div>
+          <div class="form-field">
+            <label for="f-desc">Breve descrição</label>
+            <textarea id="f-desc" name="Descrição" required placeholder="Conte rapidamente sobre a obra ou o projeto"></textarea>
+          </div>
+
+          <!-- Configurações do FormSubmit -->
+          <input type="hidden" name="_subject" value="Novo orçamento — site Eficiência Engenharia">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <!-- Honeypot anti-spam (deve ficar vazio) -->
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+          <button type="submit" class="form-submit" id="formSubmit">Enviar solicitação →</button>
+          <p class="form-note">Seus dados vão direto para a equipe. Sem cadastro, sem spam.</p>
+        </form>
+      </div>
+
+      <div class="form-success" id="formSuccess">
+        <div class="form-success-icon" aria-hidden="true">✓</div>
+        <h3>Recebido!</h3>
+        <p>Obrigado. Em breve a equipe da Eficiência<br>entra em contato pelo seu WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SEÇÃO 5 — DEPOIMENTOS ══════════ -->
+  <section class="section-testimonials" id="depoimentos" aria-label="Depoimentos">
+    <div class="container">
+      <span class="testimonials-eyebrow" data-reveal>//04 — DEPOIMENTOS</span>
+
+      <h2 class="testimonials-headline" data-reveal>
+        O que fica<br>
+        depois que<br>
+        <em class="serif" style="color:var(--ink)">a obra termina.</em>
+      </h2>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card" data-reveal>
+          <div class="testimonial-line" aria-hidden="true"></div>
+          <p class="testimonial-quote">
+            "Já tive problema sério com empreiteiro antes. Foi diferente desde o primeiro dia. Prazo, comunicação, entrega — exatamente o que foi combinado."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" aria-hidden="true">MF</div>
+            <div>
+              <span class="testimonial-name">M.F.</span>
+              <span class="testimonial-role">Médico · Lagoa Santa</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card" data-reveal data-delay="1">
+          <div class="testimonial-line" aria-hidden="true"></div>
+          <p class="testimonial-quote">
+            "Como arquiteto, preciso de um parceiro que entenda o projeto como se fosse dele. A equipe executou cada detalhe sem ruído."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" aria-hidden="true">CR</div>
+            <div>
+              <span class="testimonial-name">Arq. C.R.</span>
+              <span class="testimonial-role">Arquiteto · Belo Horizonte</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card" data-reveal data-delay="2">
+          <div class="testimonial-line" aria-hidden="true"></div>
+          <p class="testimonial-quote">
+            "Nunca pensei que construir podia ser assim. Sem estresse, sem surpresa no orçamento. Terminou no prazo."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" aria-hidden="true">TA</div>
+            <div>
+              <span class="testimonial-name">T.A.</span>
+              <span class="testimonial-role">Empresária · Confins</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ SEÇÃO 5 — CTA FINAL ══════════ -->
+  <section class="section-cta" id="contato" aria-label="Contato">
+    <div class="container">
+      <div class="cta-inner">
+        <span class="cta-eyebrow" data-reveal>//05 — VAMOS COMEÇAR</span>
+
+        <h2 class="cta-headline" data-reveal>
+          Sua obra merece uma equipe<br>
+          que <em class="serif">vai estar lá.</em>
+        </h2>
+
+        <p class="cta-desc" data-reveal data-delay="1">
+          Conta como é o projeto. Pode ser ideia ainda no papel ou
+          projeto arquitetônico completo. A gente faz funcionar.
+        </p>
+
+        <span class="cta-select-label" data-reveal data-delay="2">Selecione o tipo de orçamento</span>
+
+        <div class="cta-buttons" data-reveal data-delay="2">
+          <button type="button" class="btn-primary-lg" id="openFormBtn">Preencha um breve formulário →</button>
+          <a href="https://wa.me/5522981311843" class="btn-secondary-lg" target="_blank" rel="noopener">WhatsApp →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer dentro da seção CTA -->
+    <footer class="footer" aria-label="Rodapé">
+      <div class="container">
+        <div class="footer-inner">
+          <a href="#" class="footer-logo" aria-label="Eficiência Engenharia">
+            <svg width="18" height="23" viewBox="0 0 44 54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="color:var(--bone)">
+              <rect x="0" y="0" width="7" height="54" fill="currentColor"/>
+              <rect x="0" y="0" width="34" height="7" fill="currentColor"/>
+              <rect x="0" y="23.5" width="23" height="7" fill="var(--moss)"/>
+              <rect x="0" y="47" width="34" height="7" fill="currentColor"/>
+            </svg>
+            <span class="footer-logo-text">Eficiência Engenharia</span>
+          </a>
+
+          <span class="footer-copy">© 2026 / TODOS OS DIREITOS RESERVADOS</span>
+
+          <a href="https://instagram.com/eficiencia.engenharia" class="footer-social" target="_blank" rel="noopener">
+            @EFICIENCIA.ENGENHARIA
+          </a>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <script>
+    // ── Hero load animation ──
+    (function () {
+      const hero = document.querySelector('.hero');
+
+      function splitWords(el, baseDelay) {
+        const lines = el.querySelectorAll('.headline-line1, .headline-line2');
+        lines.forEach((line, lineIdx) => {
+          const nodes = Array.from(line.childNodes);
+          const newNodes = [];
+          let wordIdx = 0;
+
+          nodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              const words = node.textContent.trim().split(/\s+/).filter(Boolean);
+              words.forEach(word => {
+                const wordEl = document.createElement('span');
+                wordEl.className = 'word';
+                const inner = document.createElement('span');
+                inner.className = 'inner';
+                inner.textContent = word;
+                const delay = baseDelay + (lineIdx * 250) + (wordIdx * 60);
+                inner.style.transitionDelay = delay + 'ms';
+                wordEl.appendChild(inner);
+                newNodes.push(wordEl);
+                wordIdx++;
+              });
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+              // em element — wrap in word span too
+              const wordEl = document.createElement('span');
+              wordEl.className = 'word';
+              const inner = document.createElement('span');
+              inner.className = 'inner';
+              inner.appendChild(node.cloneNode(true));
+              const delay = baseDelay + (lineIdx * 250) + (wordIdx * 60);
+              inner.style.transitionDelay = delay + 'ms';
+              wordEl.appendChild(inner);
+              newNodes.push(wordEl);
+              wordIdx++;
+            }
+          });
+
+          line.innerHTML = '';
+          newNodes.forEach((n, i) => {
+            line.appendChild(n);
+            if (i < newNodes.length - 1) {
+              line.appendChild(document.createTextNode(' '));
+            }
+          });
+        });
+      }
+
+      // Respeita prefers-reduced-motion: pausa o vídeo de fundo
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const video = document.querySelector('.hero-video');
+        if (video) {
+          video.removeAttribute('autoplay');
+          video.pause();
+        }
+      }
+
+      const headline = document.getElementById('heroHeadline');
+      if (headline) splitWords(headline, 250);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          hero.classList.add('loaded');
+        });
+      });
+    }());
+
+    // ── Scroll reveal ──
+    (function () {
+      if (!window.IntersectionObserver) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+
+      document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+    }());
+
+    // ── Accordion ──
+    (function () {
+      const items = document.querySelectorAll('.accordion-item');
+
+      items.forEach(item => {
+        const trigger = item.querySelector('.accordion-trigger');
+        if (!trigger) return;
+
+        trigger.addEventListener('click', () => {
+          const isOpen = item.classList.contains('open');
+
+          // Close all
+          items.forEach(i => {
+            i.classList.remove('open');
+            const t = i.querySelector('.accordion-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+
+          // Open clicked if it was closed
+          if (!isOpen) {
+            item.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+    }());
+
+    // ── Galeria: toca vídeos só quando visíveis (economiza recurso) ──
+    (function () {
+      const vids = document.querySelectorAll('.project-media');
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+      if (!window.IntersectionObserver) {
+        vids.forEach(v => { if (v.tagName === 'VIDEO') v.play().catch(() => {}); });
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const el = entry.target;
+          if (el.tagName !== 'VIDEO') return;
+          if (entry.isIntersecting) { el.play().catch(() => {}); }
+          else { el.pause(); }
+        });
+      }, { threshold: 0.25 });
+      vids.forEach(v => { if (v.tagName === 'VIDEO') io.observe(v); });
+    }());
+
+    // ── Lightbox da galeria ──
+    (function () {
+      const lightbox = document.getElementById('lightbox');
+      const content = document.getElementById('lightboxContent');
+      const closeBtn = document.getElementById('lightboxClose');
+      if (!lightbox || !content) return;
+
+      function open(type, src, sound) {
+        content.innerHTML = '';
+        let el;
+        if (type === 'video') {
+          el = document.createElement('video');
+          el.src = src;
+          el.controls = true;
+          el.autoplay = true;
+          el.loop = true;
+          el.playsInline = true;
+          el.muted = (sound !== 'on');   // só toca com som se data-sound="on"
+        } else {
+          el = document.createElement('img');
+          el.src = src;
+          el.alt = 'Projeto Eficiência Engenharia';
+        }
+        content.appendChild(el);
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        setTimeout(() => { content.innerHTML = ''; }, 300);
+      }
+
+      document.querySelectorAll('.project-tile').forEach(tile => {
+        tile.addEventListener('click', () => {
+          // Só abre se a mídia realmente carregou (não abre placeholder vazio)
+          const media = tile.querySelector('.project-media');
+          if (!media) return;
+          open(tile.dataset.type, tile.dataset.src, tile.dataset.sound);
+        });
+      });
+
+      closeBtn.addEventListener('click', close);
+      lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('open')) close();
+      });
+    }());
+
+    // ── Formulário de orçamento (modal + envio por e-mail) ──
+    (function () {
+      const modal = document.getElementById('formModal');
+      const openBtn = document.getElementById('openFormBtn');
+      const closeBtn = document.getElementById('formClose');
+      const form = document.getElementById('orcamentoForm');
+      const card = document.getElementById('formCard');
+      const success = document.getElementById('formSuccess');
+      const submitBtn = document.getElementById('formSubmit');
+      if (!modal || !openBtn || !form) return;
+
+      // Destino dos envios:
+      const EMAIL = 'cid.pnogueira@gmail.com';
+      const ENDPOINT = 'https://formsubmit.co/ajax/' + EMAIL;
+
+      function open() {
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => { const n = document.getElementById('f-nome'); if (n) n.focus(); }, 320);
+      }
+      function close() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      openBtn.addEventListener('click', open);
+      closeBtn.addEventListener('click', close);
+      modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('open')) close();
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // Honeypot: se preenchido, é bot — ignora silenciosamente
+        if (form._honey && form._honey.value) { close(); return; }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando…';
+
+        const data = new FormData(form);
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: data
+          });
+          if (!res.ok) throw new Error('Falha no envio');
+          // Sucesso
+          card.classList.add('sent');
+          success.classList.add('show');
+        } catch (err) {
+          // Fallback: abre o e-mail do visitante já preenchido
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Enviar solicitação →';
+          const nome = encodeURIComponent(form.Nome.value);
+          const whats = encodeURIComponent(form.WhatsApp.value);
+          const desc = encodeURIComponent(form['Descrição'].value);
+          const body = 'Nome: ' + decodeURIComponent(nome) +
+                       '%0AWhatsApp: ' + decodeURIComponent(whats) +
+                       '%0ADescrição: ' + decodeURIComponent(desc);
+          window.location.href = 'mailto:' + EMAIL +
+            '?subject=' + encodeURIComponent('Novo orçamento — Eficiência Engenharia') +
+            '&body=' + body;
+        }
+      });
+    }());
+
+    // ── Nav smooth scroll ──
+    (function () {
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+          const target = document.querySelector(link.getAttribute('href'));
+          if (!target) return;
+          e.preventDefault();
+          const offset = 64;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        });
+      });
+    }());
+  </script>
+
+</body>
+</html>
