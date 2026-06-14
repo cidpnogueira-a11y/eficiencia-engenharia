@@ -2145,9 +2145,10 @@
             body: data
           });
           if (!res.ok) throw new Error('Falha no envio');
-          // Sucesso
+          // Sucesso — redireciona para a página de obrigado (conversão Google Ads)
           card.classList.add('sent');
           success.classList.add('show');
+          window.location.href = '/obrigado';
         } catch (err) {
           // Fallback: abre o e-mail do visitante já preenchido
           submitBtn.disabled = false;
