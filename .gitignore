@@ -10,3 +10,11 @@ desktop.ini
 
 # Logs
 *.log
+
+# Notas internas / privadas — NUNCA publicar no GitHub
+CLAUDE.md
+NOTAS-*.md
+*-PRIVADO.md
+
+# Material de marketing (upload manual em Google Ads etc.) — não é parte do site
+anuncios/
