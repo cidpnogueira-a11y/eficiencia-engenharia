@@ -709,6 +709,23 @@
       padding: 0 0 120px;
     }
 
+    .projects-cta {
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      margin-top: 64px; text-align: center;
+    }
+    .projects-cta-label {
+      font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 12px;
+      letter-spacing: 0.06em; color: var(--moss); text-transform: uppercase;
+    }
+    .projects-cta a {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Geist', sans-serif; font-weight: 500; font-size: 15px;
+      color: var(--bone); text-decoration: none;
+      border: 1px solid var(--line); border-radius: 100px; padding: 15px 32px;
+      transition: border-color 200ms, color 200ms;
+    }
+    .projects-cta a:hover { border-color: var(--moss); color: var(--moss); }
+
     .projects-eyebrow {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 500;
@@ -1401,6 +1418,7 @@
         <li><a href="#servicos">Serviços</a></li>
         <li><a href="#sobre">Sobre</a></li>
         <li><a href="#projetos">Projetos</a></li>
+        <li><a href="/portfolio">Portfólio</a></li>
         <li><a href="#depoimentos">Depoimentos</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
@@ -1742,6 +1760,11 @@
           </figcaption></div>
         </figure>
 
+      </div>
+
+      <div class="projects-cta" data-reveal data-delay="1">
+        <span class="projects-cta-label">// Apresentação completa — mais obras, vídeos e processos</span>
+        <a href="/portfolio">Ver portfólio completo →</a>
       </div>
     </div>
   </section>

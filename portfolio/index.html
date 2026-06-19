@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eficiência Engenharia — Portfólio de Obras</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0E0E0C;
+    --bone: #F2EFE9;
+    --moss: #B5C18E;
+    --rust: #C8501A;
+    --steel: #6B6B66;
+    --line: rgba(255,255,255,0.08);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --pad-x: 64px;
+  }
+  @media (max-width: 1023px) { :root { --pad-x: 40px; } }
+  @media (max-width: 640px)  { :root { --pad-x: 22px; } }
+
+  html, body { height: 100%; }
+  body {
+    font-family: 'Geist', sans-serif;
+    background: var(--ink);
+    color: var(--bone);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .deck { height: 100vh; display: flex; flex-direction: column; position: relative; }
+
+  /* ==================== HUD (topo) ==================== */
+  .hud {
+    height: 64px; flex: none;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 var(--pad-x);
+    border-bottom: 1px solid var(--line);
+    position: relative; z-index: 30;
+  }
+  .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--bone); }
+  .logo-text { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
+  .hud-right { display: flex; align-items: center; gap: 18px; }
+  .counter { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--steel); letter-spacing: 0.05em; }
+  .counter b { color: var(--bone); font-weight: 500; }
+  .icon-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--steel);
+    background: transparent; border: 1px solid var(--line); border-radius: 100px;
+    padding: 7px 14px; cursor: pointer; transition: color 200ms, border-color 200ms;
+  }
+  .icon-btn:hover { color: var(--moss); border-color: rgba(181,193,142,0.4); }
+
+  /* ==================== STAGE ==================== */
+  .stage { flex: 1; position: relative; overflow: hidden; }
+
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0; visibility: hidden;
+    transform: scale(1.015);
+    transition: opacity 600ms var(--ease), transform 600ms var(--ease), visibility 0s linear 600ms;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slide.active {
+    opacity: 1; visibility: visible; transform: scale(1);
+    transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+  }
+
+  /* fundo desfocado para mídia */
+  .slide .bg {
+    position: absolute; inset: -8%;
+    background-size: cover; background-position: center;
+    filter: blur(46px) brightness(0.34) saturate(1.05);
+    transform: scale(1.1);
+  }
+  .slide::after { /* vinheta */
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,0.45) 100%);
+  }
+
+  /* moldura da mídia */
+  .frame {
+    position: relative; z-index: 2;
+    max-width: calc(100% - var(--pad-x) * 2);
+    max-height: calc(100% - 88px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .frame img, .frame video {
+    max-width: 100%; max-height: calc(100vh - 64px - 64px - 96px);
+    border-radius: 6px; display: block;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+  }
+  .slide .frame img { transform: scale(1.06); transition: transform 1600ms var(--ease); }
+  .slide.active .frame img { transform: scale(1); }
+
+  /* legenda */
+  .caption {
+    position: absolute; z-index: 5; left: var(--pad-x); bottom: 34px;
+    max-width: min(560px, 70vw);
+    transform: translateY(26px); opacity: 0;
+    transition: transform 700ms var(--ease) 120ms, opacity 700ms var(--ease) 120ms;
+  }
+  .slide.active .caption { transform: translateY(0); opacity: 1; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 12px;
+    letter-spacing: 0.06em; color: var(--moss); display: block; margin-bottom: 12px;
+  }
+  .cap-title {
+    font-weight: 600; font-size: clamp(24px, 3.4vw, 40px);
+    line-height: 1.06; letter-spacing: -0.02em;
+  }
+  .cap-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--moss); }
+  .cap-meta { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--steel); margin-top: 12px; letter-spacing: 0.04em; }
+  .cap-desc { font-weight: 300; font-size: 15px; line-height: 1.55; color: rgba(242,239,233,0.78); margin-top: 12px; }
+
+  /* legenda em caixa (para vídeo, fica embaixo sem cobrir) */
+  .caption.boxed {
+    background: rgba(14,14,12,0.6); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px;
+  }
+
+  /* ==================== COVER ==================== */
+  .slide.cover { align-items: stretch; }
+  .cover-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.42; }
+  .cover-inner {
+    position: relative; z-index: 4; margin: auto; text-align: center; padding: 0 var(--pad-x);
+    max-width: 900px;
+  }
+  .cover-inner .eyebrow { margin-bottom: 22px; }
+  .cover-title {
+    font-weight: 600; font-size: clamp(40px, 8vw, 92px); line-height: 0.98; letter-spacing: -0.03em;
+  }
+  .cover-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--moss); }
+  .cover-sub { font-weight: 300; font-size: clamp(15px, 2vw, 19px); color: rgba(242,239,233,0.72); margin-top: 26px; }
+  .cover-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--steel);
+    margin-top: 54px; letter-spacing: 0.06em;
+  }
+  .cover-hint b { color: var(--moss); font-weight: 500; }
+
+  /* ==================== STATEMENT ==================== */
+  .slide.statement .s-inner { position: relative; z-index: 4; max-width: 1000px; padding: 0 var(--pad-x); width: 100%; }
+  .s-title { font-weight: 600; font-size: clamp(30px, 5.4vw, 62px); line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 56px; }
+  .s-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--moss); }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; border-top: 1px solid var(--line); padding-top: 30px; }
+  @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); gap: 28px 18px; } }
+  .stat-num { font-weight: 600; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.02em; }
+  .stat-num span { color: var(--moss); }
+  .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--steel); margin-top: 8px; letter-spacing: 0.04em; line-height: 1.5; }
+
+  /* ==================== SPLIT (antes/depois) ==================== */
+  .split-wrap { position: relative; z-index: 2; display: flex; gap: 18px; max-height: calc(100vh - 260px); padding: 0 var(--pad-x); }
+  @media (max-width: 640px) { .split-wrap { gap: 10px; } }
+  .split-col { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .split-col img { max-height: calc(100vh - 300px); max-width: 42vw; border-radius: 6px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+  @media (max-width: 640px) { .split-col img { max-width: 44vw; } }
+  .split-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-top: 14px; color: var(--steel);
+  }
+  .split-tag.depois { color: var(--moss); }
+
+  /* ==================== ABOUT ==================== */
+  .about-wrap { position: relative; z-index: 4; display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; align-items: center; max-width: 1080px; padding: 0 var(--pad-x); width: 100%; }
+  @media (max-width: 820px) { .about-wrap { grid-template-columns: 1fr; gap: 28px; max-width: 520px; } }
+  .about-photo img { width: 100%; border-radius: 8px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); aspect-ratio: 4/5; object-fit: cover; }
+  .about-role { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--steel); margin: 10px 0 18px; letter-spacing: 0.05em; }
+  .about-title { font-weight: 600; font-size: clamp(30px, 4.5vw, 52px); letter-spacing: -0.02em; line-height: 1; }
+  .about-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--moss); }
+  .about-desc { font-weight: 300; font-size: clamp(15px, 1.8vw, 18px); line-height: 1.6; color: rgba(242,239,233,0.8); margin-top: 22px; max-width: 460px; }
+
+  /* ==================== CLOSING ==================== */
+  .close-inner { position: relative; z-index: 4; text-align: center; max-width: 820px; padding: 0 var(--pad-x); margin: auto; }
+  .close-title { font-weight: 600; font-size: clamp(34px, 6.5vw, 76px); letter-spacing: -0.03em; line-height: 1; }
+  .close-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--moss); }
+  .contacts { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px 44px; margin-top: 48px; border-top: 1px solid var(--line); padding-top: 32px; }
+  .contact-item { text-align: left; }
+  .contact-k { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--moss); letter-spacing: 0.08em; text-transform: uppercase; }
+  .contact-v { font-weight: 400; font-size: 17px; margin-top: 6px; }
+
+  /* ==================== ARROWS ==================== */
+  .arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 25;
+    width: 50px; height: 50px; border-radius: 100px;
+    background: rgba(14,14,12,0.5); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); color: var(--bone);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    font-size: 18px; transition: border-color 200ms, background 200ms; user-select: none;
+  }
+  .arrow:hover { border-color: rgba(181,193,142,0.5); background: rgba(14,14,12,0.7); }
+  .arrow.prev { left: 22px; } .arrow.next { right: 22px; }
+  @media (max-width: 640px) { .arrow { width: 42px; height: 42px; } .arrow.prev { left: 10px; } .arrow.next { right: 10px; } }
+
+  /* ==================== FOOTER / DOTS ==================== */
+  .foot {
+    height: 64px; flex: none; display: flex; align-items: center; justify-content: center; gap: 9px;
+    border-top: 1px solid var(--line); position: relative; z-index: 30;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 100px; background: rgba(242,239,233,0.2); cursor: pointer; transition: background 250ms, width 250ms; }
+  .dot.on { background: var(--moss); width: 22px; }
+  .progress { position: absolute; top: 0; left: 0; height: 2px; background: var(--moss); transition: width 500ms var(--ease); z-index: 40; }
+
+  /* ==================== GRID OVERVIEW ==================== */
+  .grid-overlay {
+    position: fixed; inset: 0; z-index: 60; background: rgba(8,8,7,0.97);
+    padding: 80px var(--pad-x) 48px; overflow-y: auto;
+    opacity: 0; visibility: hidden; transition: opacity 350ms var(--ease);
+  }
+  .grid-overlay.open { opacity: 1; visibility: visible; }
+  .grid-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 32px; }
+  .grid-head h2 { font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+  .grid-head .eyebrow { margin: 0; }
+  .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .thumb {
+    position: relative; aspect-ratio: 16/10; border-radius: 8px; overflow: hidden; cursor: pointer;
+    border: 1px solid var(--line); background: #16160f; background-size: cover; background-position: center;
+    transition: transform 250ms var(--ease), border-color 250ms;
+  }
+  .thumb:hover { transform: translateY(-4px); border-color: rgba(181,193,142,0.5); }
+  .thumb-label {
+    position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 12px 14px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 65%);
+  }
+  .thumb-n { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--moss); letter-spacing: 0.06em; }
+  .thumb-t { font-weight: 500; font-size: 13px; margin-top: 3px; }
+  .thumb-play { position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; border-radius: 100px; background: rgba(14,14,12,0.6); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--moss); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; }
+    .slide .frame img { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- HUD -->
+  <header class="hud">
+    <a class="logo" href="#" onclick="return false">
+      <svg width="20" height="25" viewBox="0 0 44 54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="color:var(--bone)">
+        <rect x="0" y="0" width="7" height="54" fill="currentColor"/>
+        <rect x="0" y="0" width="34" height="7" fill="currentColor"/>
+        <rect x="0" y="23.5" width="23" height="7" fill="var(--moss)"/>
+        <rect x="0" y="47" width="34" height="7" fill="currentColor"/>
+      </svg>
+      <span class="logo-text">Eficiência Engenharia</span>
+    </a>
+    <div class="hud-right">
+      <span class="counter"><b id="cur">01</b> / <span id="tot">00</span></span>
+      <button class="icon-btn" id="gridBtn">⊞ Grade</button>
+      <button class="icon-btn" id="fsBtn">⛶ Tela cheia</button>
+    </div>
+  </header>
+
+  <!-- STAGE -->
+  <div class="stage" id="stage"></div>
+  <div class="arrow prev" id="prev" aria-label="Anterior">‹</div>
+  <div class="arrow next" id="next" aria-label="Próximo">›</div>
+
+  <!-- FOOTER -->
+  <footer class="foot" id="dots"></footer>
+  <div class="progress" id="prog"></div>
+
+  <!-- GRID -->
+  <div class="grid-overlay" id="grid">
+    <div class="grid-head">
+      <div><span class="eyebrow">// VISÃO GERAL</span><h2>Portfólio completo</h2></div>
+      <button class="icon-btn" id="gridClose">✕ Fechar</button>
+    </div>
+    <div class="thumbs" id="thumbs"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PORTFÓLIO — Eficiência Engenharia
+   Para ADICIONAR um item: copie o arquivo para a pasta /midia
+   e acrescente um objeto no array SLIDES abaixo. Tipos:
+   - {type:'image', src, eyebrow, title, meta}
+   - {type:'video', src, eyebrow, title, meta, desc}
+   - {type:'split', before, after, eyebrow, title, meta}
+   "title" aceita <em>palavra</em> para o itálico verde-musgo.
+   ============================================================ */
+const SLIDES = [
+  { type:'cover', video:'midia/capa.mp4', eyebrow:'// EFICIÊNCIA ENGENHARIA',
+    title:'Portfólio de <em>obras</em>',
+    sub:'Empreitada de alto padrão · Lagoa Santa · Vespasiano · Belo Horizonte' },
+
+  { type:'statement', eyebrow:'// QUEM SOMOS',
+    title:'Equipe fixa própria.<br>Execução <em>fiel</em> ao projeto.',
+    stats:[['+13','anos de canteiro'],['+7','em alto padrão'],['3','regiões atendidas'],['100%','equipe própria']] },
+
+  // ——— DO ZERO À ESTRUTURA ———
+  { type:'image', src:'midia/terreno-locacao.jpg', eyebrow:'// 01 — DO ZERO',
+    title:'Locação &amp; <em>terraplanagem</em>', meta:'Início de obra · Marcação no terreno' },
+
+  { type:'image', src:'midia/estrutura-pilares.jpg', eyebrow:'// 02 — ESTRUTURA',
+    title:'Estrutura <em>metálica</em>', meta:'Obra comercial · Montagem de pilares' },
+
+  { type:'image', src:'midia/fundacao-ferragem.jpg', eyebrow:'// 03 — FUNDAÇÃO',
+    title:'Armação de <em>fundação</em>', meta:'Equipe própria em campo' },
+
+  { type:'video', src:'midia/video-instrucao.mp4', eyebrow:'// 04 — PROCESSO',
+    title:'Instrução <em>inicial</em> de obra', meta:'Lucas Soares · Canteiro',
+    desc:'Orientação da equipe no início da execução — alinhamento antes de levantar a primeira parede.' },
+
+  { type:'video', src:'midia/video-laje.mp4', eyebrow:'// 05 — EXECUÇÃO',
+    title:'2ª laje em <em>execução</em>', meta:'Solicitada pelo arquiteto',
+    desc:'Da solicitação no projeto à execução pela equipe — fidelidade ao que foi desenhado.' },
+
+  // ——— ACABAMENTO / ALTO PADRÃO ———
+  { type:'image', src:'midia/escada-metalica.jpg', eyebrow:'// 06 — DETALHE',
+    title:'Escada <em>metálica</em>', meta:'Parede em pedra natural · Marcenaria de estrutura' },
+
+  { type:'image', src:'midia/parede-tijolo.jpg', eyebrow:'// 07 — ÁREA SOCIAL',
+    title:'Parede em <em>tijolinho</em>', meta:'Teto ripado em madeira · Alto padrão' },
+
+  { type:'image', src:'midia/hall-espelho.jpg', eyebrow:'// 08 — INTERIORES',
+    title:'Hall com espelho <em>d\'água</em>', meta:'Piso em travertino · Acabamento fino' },
+
+  { type:'image', src:'midia/varanda-vista.jpg', eyebrow:'// 09 — VARANDA',
+    title:'Varanda com <em>vista</em>', meta:'Residência de alto padrão · Vista para a serra' },
+
+  { type:'video', src:'midia/video-obra-1.mp4', eyebrow:'// 10 — BASTIDORES',
+    title:'Acompanhamento de <em>obra</em>', meta:'Execução em campo',
+    desc:'Bastidores da execução — controle de qualidade em cada etapa.' },
+
+  { type:'image', src:'midia/piscina.jpg', eyebrow:'// 11 — ÁREA DE LAZER',
+    title:'Piscina &amp; área de <em>lazer</em>', meta:'Residencial · Alto padrão' },
+
+  { type:'image', src:'midia/area-lazer.jpg', eyebrow:'// 12 — ACABAMENTO',
+    title:'Acabamento <em>externo</em>', meta:'Área de lazer · Detalhe de obra' },
+
+  { type:'video', src:'midia/video-obra-2.mp4', eyebrow:'// 13 — EXECUÇÃO',
+    title:'Detalhes da <em>execução</em>', meta:'Processo em obra',
+    desc:'O cuidado que separa uma obra comum de uma obra de alto padrão.' },
+
+  { type:'split', before:'midia/banheiro-antes.jpg', after:'midia/banheiro-depois.jpg',
+    eyebrow:'// 14 — ANTES &amp; DEPOIS', title:'Banheiro em alto <em>padrão</em>', meta:'Transformação completa' },
+
+  // ——— COMERCIAL ———
+  { type:'image', src:'midia/obra-comercial.jpg', eyebrow:'// 15 — COMERCIAL',
+    title:'Obra comercial <em>interna</em>', meta:'Projeto comercial · Execução' },
+
+  { type:'image', src:'midia/loja-comercial.jpg', eyebrow:'// 16 — COMERCIAL',
+    title:'Loja em <em>shopping</em>', meta:'Acabamento de piso · Varejo' },
+
+  { type:'video', src:'midia/video-acabamento.mp4', eyebrow:'// 17 — BASTIDORES',
+    title:'Acabamento em <em>execução</em>', meta:'Processo em obra',
+    desc:'Assentamento e acabamento — o detalhe feito à mão pela equipe.' },
+
+  { type:'image', src:'midia/predio-uberlandia.jpg', eyebrow:'// 18 — COMERCIAL',
+    title:'Prédio comercial · <em>Uberlândia</em>', meta:'Do zero à finalização · MG' },
+
+  { type:'video', src:'midia/video-gestao.mp4', eyebrow:'// 19 — GESTÃO',
+    title:'Gestão <em>inteligente</em> da obra', meta:'Organização · Controle',
+    desc:'Controle do interior do projeto, do início ao fim, sem retrabalho.' },
+
+  { type:'closing', eyebrow:'// VAMOS CONVERSAR',
+    title:'Vamos construir <em>juntos</em>',
+    contacts:[['WhatsApp','(22) 98131-1843'],['Site','eficiencia-engenharia.vercel.app'],['Regiões','Lagoa Santa · Vespasiano · BH']] },
+];
+
+/* ---------- construção dos slides ---------- */
+const stage = document.getElementById('stage');
+
+function mediaBg(src){ return `<div class="bg" style="background-image:url('${src}')"></div>`; }
+
+function build(s){
+  const el = document.createElement('div');
+  el.className = 'slide ' + s.type;
+  let h = '';
+
+  if (s.type === 'cover'){
+    h = `<video class="cover-video" src="${s.video}" autoplay muted loop playsinline></video>
+      <div class="cover-inner">
+        <span class="eyebrow">${s.eyebrow}</span>
+        <h1 class="cover-title">${s.title}</h1>
+        <p class="cover-sub">${s.sub}</p>
+        <p class="cover-hint">Use as <b>setas →</b> para navegar · <b>G</b> para grade · <b>F</b> tela cheia</p>
+      </div>`;
+  }
+  else if (s.type === 'statement'){
+    const stats = s.stats.map(([n,l])=>`<div><div class="stat-num"><span>${n}</span></div><div class="stat-label">${l}</div></div>`).join('');
+    h = `<div class="s-inner"><span class="eyebrow">${s.eyebrow}</span>
+      <h2 class="s-title">${s.title}</h2>
+      <div class="stats">${stats}</div></div>`;
+  }
+  else if (s.type === 'image'){
+    h = mediaBg(s.src) + `<div class="frame"><img src="${s.src}" alt=""></div>
+      <div class="caption"><span class="eyebrow">${s.eyebrow}</span>
+      <h2 class="cap-title">${s.title}</h2><div class="cap-meta">${s.meta}</div></div>`;
+  }
+  else if (s.type === 'video'){
+    h = `<div class="bg" style="background:#0b0b08"></div>
+      <div class="frame"><video src="${s.src}" controls playsinline preload="metadata"></video></div>
+      <div class="caption boxed"><span class="eyebrow">${s.eyebrow}</span>
+      <h2 class="cap-title">${s.title}</h2>
+      ${s.desc?`<p class="cap-desc">${s.desc}</p>`:''}
+      <div class="cap-meta">${s.meta}</div></div>`;
+  }
+  else if (s.type === 'split'){
+    h = mediaBg(s.after) + `<div class="split-wrap">
+        <div class="split-col"><img src="${s.before}" alt="Antes"><div class="split-tag">Antes</div></div>
+        <div class="split-col"><img src="${s.after}" alt="Depois"><div class="split-tag depois">Depois</div></div>
+      </div>
+      <div class="caption"><span class="eyebrow">${s.eyebrow}</span>
+      <h2 class="cap-title">${s.title}</h2><div class="cap-meta">${s.meta}</div></div>`;
+  }
+  else if (s.type === 'about'){
+    h = `<div class="about-wrap">
+        <div class="about-photo"><img src="${s.img}" alt="Lucas Soares"></div>
+        <div><span class="eyebrow">${s.eyebrow}</span>
+          <h2 class="about-title">${s.title}</h2>
+          <div class="about-role">${s.role}</div>
+          <p class="about-desc">${s.desc}</p></div>
+      </div>`;
+  }
+  else if (s.type === 'closing'){
+    const c = s.contacts.map(([k,v])=>`<div class="contact-item"><div class="contact-k">${k}</div><div class="contact-v">${v}</div></div>`).join('');
+    h = `<div class="close-inner"><span class="eyebrow">${s.eyebrow}</span>
+      <h2 class="close-title">${s.title}</h2>
+      <div class="contacts">${c}</div></div>`;
+  }
+  el.innerHTML = h;
+  return el;
+}
+
+SLIDES.forEach(s => stage.appendChild(build(s)));
+const slides = [...stage.children];
+const total = slides.length;
+document.getElementById('tot').textContent = String(total).padStart(2,'0');
+
+/* ---------- dots ---------- */
+const dotsWrap = document.getElementById('dots');
+slides.forEach((_, i) => {
+  const d = document.createElement('div'); d.className = 'dot'; d.onclick = () => go(i);
+  dotsWrap.appendChild(d);
+});
+const dots = [...dotsWrap.children];
+
+/* ---------- navegação ---------- */
+let idx = 0;
+function go(n){
+  if (n < 0 || n >= total || n === idx) { if(n===idx) return; }
+  n = Math.max(0, Math.min(total-1, n));
+  // pausa todos os vídeos (menos a capa)
+  stage.querySelectorAll('video:not(.cover-video)').forEach(v => { v.pause(); });
+  slides[idx].classList.remove('active');
+  dots[idx].classList.remove('on');
+  idx = n;
+  slides[idx].classList.add('active');
+  dots[idx].classList.add('on');
+  document.getElementById('cur').textContent = String(idx+1).padStart(2,'0');
+  document.getElementById('prog').style.width = ((idx+1)/total*100) + '%';
+}
+function nextS(){ go(Math.min(idx+1, total-1)); }
+function prevS(){ go(Math.max(idx-1, 0)); }
+
+document.getElementById('next').onclick = nextS;
+document.getElementById('prev').onclick = prevS;
+
+/* ---------- teclado ---------- */
+document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName||'').toLowerCase();
+  if (e.key === 'ArrowRight') { e.preventDefault(); nextS(); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); prevS(); }
+  else if (e.key === ' ' && tag !== 'video' && tag !== 'button') { e.preventDefault(); nextS(); }
+  else if (e.key.toLowerCase() === 'g') { toggleGrid(); }
+  else if (e.key.toLowerCase() === 'f') { toggleFs(); }
+  else if (e.key === 'Escape') { document.getElementById('grid').classList.remove('open'); }
+});
+
+/* ---------- swipe (touch) ---------- */
+let tx = 0;
+stage.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive:true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) { dx < 0 ? nextS() : prevS(); }
+}, {passive:true});
+
+/* ---------- tela cheia ---------- */
+function toggleFs(){
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+document.getElementById('fsBtn').onclick = toggleFs;
+
+/* ---------- grade ---------- */
+const gridEl = document.getElementById('grid');
+const thumbsEl = document.getElementById('thumbs');
+SLIDES.forEach((s, i) => {
+  const t = document.createElement('div'); t.className = 'thumb';
+  let bg = '', play = '', label = '';
+  if (s.type === 'image') { bg = s.src; label = s.title; }
+  else if (s.type === 'split') { bg = s.after; label = s.title; }
+  else if (s.type === 'about') { bg = s.img; label = 'Lucas Soares'; }
+  else if (s.type === 'video') { play = '<div class="thumb-play">▶</div>'; label = s.title; }
+  else if (s.type === 'cover') { label = 'Capa'; }
+  else if (s.type === 'statement') { label = 'Quem somos'; }
+  else if (s.type === 'closing') { label = 'Contato'; }
+  if (bg) t.style.backgroundImage = `url('${bg}')`;
+  t.innerHTML = play + `<div class="thumb-label"><span class="thumb-n">${String(i+1).padStart(2,'0')}</span><span class="thumb-t">${(label||'').replace(/<[^>]+>/g,'')}</span></div>`;
+  t.onclick = () => { go(i); toggleGrid(false); };
+  thumbsEl.appendChild(t);
+});
+function toggleGrid(force){
+  const open = force === undefined ? !gridEl.classList.contains('open') : force;
+  gridEl.classList.toggle('open', open);
+}
+document.getElementById('gridBtn').onclick = () => toggleGrid();
+document.getElementById('gridClose').onclick = () => toggleGrid(false);
+
+/* ---------- start ---------- */
+go(0);
+</script>
+</body>
+</html>
