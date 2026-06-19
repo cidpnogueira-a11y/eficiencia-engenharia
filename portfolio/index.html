@@ -446,14 +446,13 @@ slides.forEach((_, i) => {
 const dots = [...dotsWrap.children];
 
 /* ---------- navegação ---------- */
-let idx = 0;
+let idx = -1;
 function go(n){
-  if (n < 0 || n >= total || n === idx) { if(n===idx) return; }
   n = Math.max(0, Math.min(total-1, n));
+  if (n === idx) return;
   // pausa todos os vídeos (menos a capa)
   stage.querySelectorAll('video:not(.cover-video)').forEach(v => { v.pause(); });
-  slides[idx].classList.remove('active');
-  dots[idx].classList.remove('on');
+  if (slides[idx]) { slides[idx].classList.remove('active'); dots[idx].classList.remove('on'); }
   idx = n;
   slides[idx].classList.add('active');
   dots[idx].classList.add('on');
